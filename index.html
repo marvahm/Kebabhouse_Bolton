@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kebab House Bolton</title>
+<meta name="description" content="Kebab House Bolton — Bolton's collection-only takeaway since 1976. Browse the full menu: kebabs, burgers, appetisers, sides, desserts and drinks.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&family=Fira+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: announcement bar + sticky white header, big black hero band (matches the
+   original site's dark "Our Delicious Menu!" banners), a photo-tile category grid
+   that darkens on hover exactly like the source site, then card grids per category. */
+:root{
+  color-scheme: light;
+  --bg:#ffffff; --surface:#f7f7f7; --ink:#222222; --grey:#7a7a7a; --border:#ececec;
+  --red:#e7272d; --red-dark:#c81f25; --gold:#fbbe36; --black:#141414;
+  --font-head:'Open Sans', system-ui, -apple-system, sans-serif;
+  --font-body:'Fira Sans', system-ui, -apple-system, sans-serif;
+}
+*{box-sizing:border-box}
+html{height:100%}
+body{background:var(--bg); color:var(--grey); font-family:var(--font-body); line-height:1.6; min-height:100%; display:flex; flex-direction:column; margin:0}
+img{max-width:100%}
+a{color:inherit; text-decoration:none}
+h1,h2,h3,h4{font-family:var(--font-head); color:var(--ink); margin:0; text-wrap:balance}
+.wrap{max-width:1140px; margin-inline:auto; padding-inline:20px; width:100%}
+section{padding-block:clamp(44px,7vw,88px)}
+main{flex:1 0 auto; display:flex; flex-direction:column}
+.page{flex:1 0 auto; display:flex; flex-direction:column; justify-content:center; width:100%}
+[hidden]{display:none!important}
+footer{flex:0 0 auto}
+
+/* announcement bar */
+.announce{background:var(--black); color:#fff; text-align:center; font-size:.78rem; font-weight:600; letter-spacing:.02em; padding:9px 16px}
+
+/* header */
+header.site{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--border)}
+.nav-row{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-block:14px; max-width:1140px; margin-inline:auto; padding-inline:20px}
+.brand{display:flex; align-items:center; gap:12px; font-family:var(--font-head); font-weight:800; font-size:1.85rem; color:var(--ink); white-space:nowrap}
+.brand .mark{width:0; height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-bottom:40px solid var(--red); transform:rotate(-10deg); flex:none}
+nav.links{display:flex; gap:24px; flex-wrap:wrap}
+nav.links a{position:relative; font-size:.82rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--ink); padding-block:4px; white-space:nowrap}
+nav.links a::after{content:""; position:absolute; left:50%; right:50%; bottom:0; height:2px; background:var(--red); transition:left .2s ease, right .2s ease}
+nav.links a:hover{color:var(--red)}
+nav.links a:hover::after{left:0; right:0}
+nav.links a.active{color:var(--red)}
+nav.links a.active::after{left:0; right:0}
+@media (max-width:760px){
+  .nav-row{justify-content:center; padding-block:12px 10px}
+  .brand{width:100%; justify-content:center; font-size:1.55rem}
+  nav.links{width:100%; justify-content:center; gap:10px 18px; padding-top:10px; border-top:1px solid var(--border)}
+  nav.links a{font-size:.72rem}
+}
+@media (max-width:400px){
+  nav.links{gap:8px 13px}
+  nav.links a{font-size:.66rem}
+}
+
+/* buttons, pill style lifted from the source site's .btn-primary */
+.btn{display:inline-flex; align-items:center; gap:8px; padding:13px 27px; border-radius:36px; font-family:var(--font-head); font-weight:700; font-size:.82rem; text-transform:uppercase; letter-spacing:.03em; border:2px solid transparent; cursor:pointer}
+.btn-primary{background:var(--red); color:#fff}
+.btn-primary:hover{background:var(--red-dark)}
+.btn-ghost{background:#fff; color:var(--red); border-color:var(--red)}
+.btn-ghost:hover{background:var(--red); color:#fff}
+
+/* hero: big black band like the Menu page banner */
+.hero{background:var(--black); padding-block:clamp(56px,10vw,100px); text-align:center}
+.hero .eyebrow{display:inline-block; font-family:var(--font-head); font-weight:800; font-style:italic; color:var(--red); font-size:1.05rem; margin-bottom:10px}
+.hero h1{color:#fff; font-size:clamp(2.4rem,6vw,4.2rem); line-height:1.04; font-weight:800}
+.hero h1 span{color:var(--red)}
+.hero p.lede{color:#c9c9c9; font-size:1.05rem; max-width:52ch; margin:18px auto 30px}
+.cta-row{display:flex; gap:14px; flex-wrap:wrap; justify-content:center}
+.info-strip{display:flex; gap:28px; justify-content:center; flex-wrap:wrap; margin-top:34px; color:#9a9a9a; font-size:.86rem}
+.info-strip strong{color:#fff; display:block; font-family:var(--font-head); font-size:1rem}
+
+/* about */
+.about-grid{display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:start}
+@media (max-width:760px){.about-grid{grid-template-columns:1fr}}
+.eyebrow-red{font-family:var(--font-head); font-weight:800; font-style:italic; color:var(--red); font-size:.92rem; margin-bottom:6px; display:block}
+.about-grid h2{font-size:clamp(1.9rem,4vw,2.6rem); font-weight:800}
+.about-grid p{margin-block:14px 0; max-width:60ch}
+.stat-list{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:22px}
+.stat{background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px; text-align:center}
+.stat .num{font-family:var(--font-head); font-weight:800; font-size:1.8rem; color:var(--red)}
+.stat .cap{font-size:.78rem; color:var(--grey); margin-top:4px}
+
+/* menu tile grid - replicates the source site's hover-darkening photo tiles */
+#menu, .cat-page{background:var(--surface)}
+.menu-head{text-align:center; max-width:60ch; margin-inline:auto}
+.menu-head h2{font-size:clamp(2rem,4.4vw,2.9rem); font-weight:800}
+.menu-head p{margin-top:10px}
+.tile-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:34px}
+@media (max-width:900px){.tile-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.tile-grid{grid-template-columns:1fr}}
+.tile{position:relative; display:flex; align-items:center; justify-content:center; min-height:160px; border-radius:6px; overflow:hidden; cursor:pointer; isolation:isolate}
+.tile::before{content:""; position:absolute; inset:0; z-index:0}
+.tile .tile-overlay{position:absolute; inset:0; background:#000; opacity:0; transition:opacity .3s; z-index:1}
+.tile:hover .tile-overlay{opacity:.32}
+.tile span{position:relative; z-index:2; color:#fff; font-family:var(--font-head); font-weight:800; font-size:clamp(1.15rem,2.2vw,1.5rem); text-align:center; padding-inline:14px; text-shadow:0 2px 10px rgba(0,0,0,.35)}
+.tile-1::before{background:linear-gradient(135deg,#8a1416,#2a0607)}
+.tile-2::before{background:linear-gradient(135deg,#3d2412,#140a04)}
+.tile-3::before{background:linear-gradient(135deg,#5a3414,#1c1005)}
+.tile-4::before{background:linear-gradient(135deg,#7a1c1f,#200608)}
+.tile-5::before{background:linear-gradient(135deg,#1f6b5c,#0a211c)}
+.tile-6::before{background:linear-gradient(135deg,#1f4d6b,#0a1a24)}
+.tile-7::before{background:linear-gradient(135deg,#6b2f5a,#1f0c1a)}
+.tile-8::before{background:linear-gradient(135deg,#6b5a1f,#241d09)}
+
+.back-link{display:inline-flex; align-items:center; gap:6px; font-family:var(--font-head); font-weight:700; font-size:.78rem; text-transform:uppercase; letter-spacing:.04em; color:var(--red); margin-bottom:22px}
+.back-link:hover{text-decoration:underline}
+.cat-block-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; border-bottom:3px solid var(--black); padding-bottom:14px; margin-bottom:26px}
+.cat-block-head h2{font-size:clamp(1.8rem,3.6vw,2.4rem); font-weight:800}
+.cat-block-head span{font-size:.78rem; color:var(--grey); font-weight:600; text-transform:uppercase; letter-spacing:.04em}
+.card-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
+@media (max-width:860px){.card-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.card-grid{grid-template-columns:1fr}}
+.card{background:#fff; border:1px solid var(--border); border-radius:8px; padding:0 0 16px; text-align:center; overflow:hidden; transition:box-shadow .2s, transform .2s}
+.card:hover{box-shadow:0 14px 30px -18px rgba(0,0,0,.35); transform:translateY(-2px)}
+.card-thumb{height:92px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; margin-bottom:14px; transition:transform .35s}
+.card:hover .card-thumb{transform:scale(1.08)}
+.card h4{font-family:var(--font-head); font-weight:300; font-size:1.18rem; padding-inline:14px}
+.card .price{display:block; font-family:var(--font-body); font-weight:700; font-size:1rem; color:var(--red); margin-top:6px}
+.card p{font-size:.84rem; color:var(--grey); padding-inline:18px; margin-top:8px}
+.combo .card-thumb{background:#fdeceb}
+
+/* contact */
+.contact-head{margin-bottom:28px}
+.contact-head h2{font-size:clamp(1.9rem,4vw,2.5rem); font-weight:800; margin-top:4px}
+.contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:start}
+@media (max-width:760px){.contact-grid{grid-template-columns:1fr}}
+.contact-grid > div > .eyebrow-red{margin-bottom:10px}
+.info-row{display:flex; justify-content:space-between; align-items:center; gap:12px; padding-block:14px; border-bottom:1px solid var(--border)}
+.info-row:last-child{border-bottom:none}
+.info-row .k{font-size:.74rem; text-transform:uppercase; letter-spacing:.08em; color:var(--grey); font-weight:700}
+.info-row .v{font-weight:600; color:var(--ink); text-align:right}
+.copy-btn{font-family:var(--font-head); font-size:.72rem; font-weight:700; border:1px solid var(--border); background:var(--surface); color:var(--grey); border-radius:6px; padding:4px 9px; cursor:pointer; margin-left:10px}
+.copy-btn:hover{color:var(--red); border-color:var(--red)}
+.hours-table{width:100%; border-collapse:collapse; font-size:.92rem}
+.hours-table td{padding:9px 0; border-bottom:1px solid var(--border); color:var(--ink)}
+.hours-table tr:last-child td{border-bottom:none}
+.hours-table td:last-child{text-align:right; color:var(--grey)}
+
+/* careers */
+.careers-card{background:var(--black); border-radius:10px; padding:clamp(26px,5vw,46px); display:flex; justify-content:space-between; gap:24px; align-items:center; flex-wrap:wrap}
+.careers-card h2{color:#fff; font-size:clamp(1.6rem,3.2vw,2.1rem); max-width:24ch; font-weight:800}
+.careers-card p{color:#aaa; max-width:46ch; margin-top:10px}
+
+/* footer - solid red band matching the source site's footer */
+footer{background:var(--red); color:#fdeceb; padding-block:28px}
+.foot-row{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:center; font-size:.84rem}
+.foot-row .brand{font-size:1.05rem; font-weight:800; font-family:var(--font-head); color:#fff}
+.foot-social{display:flex; gap:12px}
+.foot-social a{width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,.14); display:flex; align-items:center; justify-content:center; font-size:.85rem; font-weight:700; color:#fff; transition:background .15s}
+.foot-social a:hover{background:rgba(255,255,255,.3)}
+
+.sr-copy-msg{font-size:.7rem; color:var(--red); margin-left:8px}
+</style>
+</head>
+<body>
+
+<div class="announce">We're a collection-only takeaway &mdash; no online ordering, just call ahead.</div>
+
+<header class="site">
+  <div class="nav-row">
+    <div class="brand"><span class="mark"></span>Kebab House Bolton</div>
+    <nav class="links" id="navLinks">
+      <a href="#" data-page="home">Home</a>
+      <a href="#" data-page="about">About</a>
+      <a href="#" data-page="menu">Menu</a>
+      <a href="#" data-page="contact">Contact</a>
+      <a href="#" data-page="careers">Careers</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero page" id="home" data-page="home">
+    <div class="wrap">
+      <div class="eyebrow">Est. 1976</div>
+      <h1>Bolton&rsquo;s <span>finest</span> takeaway.</h1>
+      <p class="lede">Homemade recipes, honest ingredients and the same red donner that put us on the map nearly fifty years ago. Everything on the grill, made fresh to order.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#" data-page="menu">View the Menu</a>
+        <a class="btn btn-ghost" href="#" data-page="contact">Get in Touch</a>
+      </div>
+      <div class="info-strip">
+        <div><strong>4PM&ndash;12AM</strong>Every day</div>
+        <div><strong>30 St Helens Rd</strong>Bolton BL3 3NH</div>
+        <div><strong>01204 867751</strong>Collection only</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="about" data-page="about" hidden>
+    <div class="wrap about-grid">
+      <div>
+        <span class="eyebrow-red">Our Story</span>
+        <h2>Three generations on the grill.</h2>
+      </div>
+      <div>
+        <p>Kebab House Bolton opened its doors in 1976 and quickly built a name for itself with a homemade red donner recipe that customers still ask for by name. In 1983, Mohammed Fazal and his two sons took over the business, and today a third generation of the family keeps the grills running.</p>
+        <p>Nothing here is mass-produced. Meat is marinated and prepped in-house, bread is baked fresh, and the menu has grown over the decades from regulars telling us what they wanted more of. We're a collection-only takeaway &mdash; no delivery platforms, no middlemen &mdash; just food made to order and handed straight to you.</p>
+        <div class="stat-list">
+          <div class="stat"><div class="num">1976</div><div class="cap">Year we opened</div></div>
+          <div class="stat"><div class="num">3rd</div><div class="cap">Generation running it</div></div>
+          <div class="stat"><div class="num">53</div><div class="cap">Items on the menu</div></div>
+          <div class="stat"><div class="num">7</div><div class="cap">Days a week we're open</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="menu" data-page="menu" hidden>
+    <div class="wrap">
+      <div class="menu-head">
+        <span class="eyebrow-red">The Full Menu</span>
+        <h2>Choose your combo &amp; browse the menu.</h2>
+        <p>Collection only &mdash; call ahead to order. Pick a category to see every item.</p>
+      </div>
+
+      <div class="tile-grid">
+        <a class="tile tile-1" href="#" data-page="cat-box"><span class="tile-overlay"></span><span>Burger Box</span></a>
+        <a class="tile tile-2" href="#" data-page="cat-meats"><span class="tile-overlay"></span><span>Meats</span></a>
+        <a class="tile tile-3" href="#" data-page="cat-burgers"><span class="tile-overlay"></span><span>Burgers</span></a>
+        <a class="tile tile-4" href="#" data-page="cat-appetisers"><span class="tile-overlay"></span><span>Appetisers</span></a>
+        <a class="tile tile-5" href="#" data-page="cat-kids"><span class="tile-overlay"></span><span>Kids Meal</span></a>
+        <a class="tile tile-6" href="#" data-page="cat-drinks"><span class="tile-overlay"></span><span>Drinks</span></a>
+        <a class="tile tile-7" href="#" data-page="cat-desserts"><span class="tile-overlay"></span><span>Desserts</span></a>
+        <a class="tile tile-8" href="#" data-page="cat-sides"><span class="tile-overlay"></span><span>Sides</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="page cat-page" id="cat-box" data-page="cat-box" hidden>
+    <div class="wrap">
+      <a class="back-link" href="#" data-page="menu">&larr; Back to Menu</a>
+      <div class="cat-block-head"><h2>Burger Box</h2><span>Combo</span></div>
+      <div class="card-grid">
+        <div class="card combo"><div class="card-thumb">&#127828;</div><h4>Burger Box</h4><span class="price">&pound;8.00</span><p>A burger of your choice, plus donner or chicken donner, 2 grilled wings, chips and a can of drink.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page cat-page" id="cat-meats" data-page="cat-meats" hidden>
+    <div class="wrap">
+      <a class="back-link" href="#" data-page="menu">&larr; Back to Menu</a>
+      <div class="cat-block-head"><h2>Meats</h2><span>8 items</span></div>
+      <div class="card-grid">
+        <div class="card"><div class="card-thumb">&#129362;</div><h4>Donner Kebab</h4><span class="price">&pound;5.00</span><p>Our signature spit-roasted donner, thinly sliced fresh off the grill.</p></div>
+        <div class="card"><div class="card-thumb">&#129362;</div><h4>Chicken Donner</h4><span class="price">&pound;5.00</span><p>Marinated chicken donner, grilled slow and sliced thick for flavour.</p></div>
+        <div class="card"><div class="card-thumb">&#129362;</div><h4>Chicken Tikka</h4><span class="price">&pound;5.00</span><p>Tender chicken in our house tikka spice blend, char-grilled to order.</p></div>
+        <div class="card"><div class="card-thumb">&#129362;</div><h4>Meat Tikka</h4><span class="price">&pound;6.00</span><p>Diced lamb marinated overnight in tikka spices, grilled over open flame.</p></div>
+        <div class="card"><div class="card-thumb">&#129362;</div><h4>Seek Kebab</h4><span class="price">&pound;4.40</span><p>Spiced minced lamb, hand-skewered and grilled until smoky at the edges.</p></div>
+        <div class="card"><div class="card-thumb">&#11088;</div><h4>Kebab House Special</h4><span class="price">&pound;9.00</span><p>Our biggest kebab: a loaded mix of donner, chicken and seek with all the trimmings.</p></div>
+        <div class="card"><div class="card-thumb">&#128293;</div><h4>Mix Grill Platter</h4><span class="price">&pound;11.50</span><p>A feast for the table &mdash; donner, chicken tikka, seek and meat tikka, grilled together.</p></div>
+        <div class="card"><div class="card-thumb">&#129362;</div><h4>Mix Any 2</h4><span class="price">&pound;6.00</span><p>Can&rsquo;t decide? Pick any two meats from the grill, mixed in one kebab.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page cat-page" id="cat-burgers" data-page="cat-burgers" hidden>
+    <div class="wrap">
+      <a class="back-link" href="#" data-page="menu">&larr; Back to Menu</a>
+      <div class="cat-block-head"><h2>Burgers</h2><span>9 items</span></div>
+      <div class="card-grid">
+        <div class="card"><div class="card-thumb">&#127828;</div><h4>Supreme</h4><span class="price">&pound;4.50</span><p>Flame-grilled beef patty with fresh salad and our house sauce.</p></div>
+        <div class="card"><div class="card-thumb">&#127828;</div><h4>Double Supreme</h4><span class="price">&pound;5.50</span><p>Two flame-grilled patties, double cheese, and all the trimmings.</p></div>
+        <div class="card"><div class="card-thumb">&#127828;</div><h4>The Mega Stack</h4><span class="price">&pound;7.50</span><p>Our ultimate burger: beef, chicken and donner stacked with cheese and salad.</p></div>
+        <div class="card"><div class="card-thumb">&#127828;</div><h4>Chicken Fillet</h4><span class="price">&pound;4.50</span><p>A whole breaded chicken fillet, crisp outside, juicy inside, dressed with salad.</p></div>
+        <div class="card"><div class="card-thumb">&#127828;</div><h4>Chicken Steak Burger</h4><span class="price">&pound;4.50</span><p>Char-grilled chicken steak topped with melted cheese and fresh salad.</p></div>
+        <div class="card"><div class="card-thumb">&#127828;</div><h4>1/4 Cheeseburger</h4><span class="price">&pound;4.50</span><p>A quarter-pound beef patty with melted cheese &mdash; classic and simple.</p></div>
+        <div class="card"><div class="card-thumb">&#127828;</div><h4>1/2 Cheeseburger</h4><span class="price">&pound;5.50</span><p>A half-pound beef patty loaded with cheese for a bigger appetite.</p></div>
+        <div class="card"><div class="card-thumb">&#127828;</div><h4>The Donner Stack</h4><span class="price">&pound;6.00</span><p>Burger meets kebab: a beef patty topped with sliced donner and sauce.</p></div>
+        <div class="card"><div class="card-thumb">&#127828;</div><h4>The Meat Feast</h4><span class="price">&pound;5.50</span><p>Beef patty piled with donner and chicken for the ultimate meat lover&rsquo;s burger.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page cat-page" id="cat-appetisers" data-page="cat-appetisers" hidden>
+    <div class="wrap">
+      <a class="back-link" href="#" data-page="menu">&larr; Back to Menu</a>
+      <div class="cat-block-head"><h2>Appetisers</h2><span>7 items</span></div>
+      <div class="card-grid">
+        <div class="card"><div class="card-thumb">&#129360;</div><h4>Poppadom</h4><span class="price">&pound;1.10</span><p>Crisp, thin and lightly spiced &mdash; the perfect starter.</p></div>
+        <div class="card"><div class="card-thumb">&#127831;</div><h4>Chicken Strips</h4><span class="price">&pound;4.00</span><p>Breaded chicken breast strips, fried golden and crunchy.</p></div>
+        <div class="card"><div class="card-thumb">&#127831;</div><h4>Spicy Chicken Wings (5)</h4><span class="price">&pound;4.50</span><p>Five wings tossed in our spicy house marinade and grilled.</p></div>
+        <div class="card"><div class="card-thumb">&#129362;</div><h4>Chicken Tikka on Bone</h4><span class="price">&pound;6.00</span><p>Bone-in chicken marinated in tikka spices and roasted until smoky.</p></div>
+        <div class="card"><div class="card-thumb">&#129362;</div><h4>Meat Chops (4)</h4><span class="price">&pound;6.50</span><p>Four lamb chops, marinated and chargrilled for a smoky, tender bite.</p></div>
+        <div class="card"><div class="card-thumb">&#127832;</div><h4>Vegetable Samosa (2)</h4><span class="price">&pound;2.50</span><p>Crisp pastry parcels filled with spiced mixed vegetables.</p></div>
+        <div class="card"><div class="card-thumb">&#127832;</div><h4>Meat Samosa (2)</h4><span class="price">&pound;2.50</span><p>Crisp pastry parcels filled with spiced minced meat.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page cat-page" id="cat-kids" data-page="cat-kids" hidden>
+    <div class="wrap">
+      <a class="back-link" href="#" data-page="menu">&larr; Back to Menu</a>
+      <div class="cat-block-head"><h2>Kids Meal</h2><span>4 items</span></div>
+      <div class="card-grid">
+        <div class="card"><div class="card-thumb">&#127831;</div><h4>Chicken Nuggets</h4><span class="price">&pound;5.00</span><p>Crispy chicken nuggets served with chips &mdash; a kids&rsquo; favourite.</p></div>
+        <div class="card"><div class="card-thumb">&#127831;</div><h4>Chicken Popcorn</h4><span class="price">&pound;5.00</span><p>Bite-sized crispy chicken pieces, served with chips.</p></div>
+        <div class="card"><div class="card-thumb">&#127828;</div><h4>Chicken Tikka Wrap</h4><span class="price">&pound;5.00</span><p>A soft wrap filled with grilled chicken tikka, mild and kid-sized.</p></div>
+        <div class="card"><div class="card-thumb">&#127828;</div><h4>Chicken Steak Wrap</h4><span class="price">&pound;5.00</span><p>A soft wrap filled with chargrilled chicken steak, mild and kid-sized.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page cat-page" id="cat-drinks" data-page="cat-drinks" hidden>
+    <div class="wrap">
+      <a class="back-link" href="#" data-page="menu">&larr; Back to Menu</a>
+      <div class="cat-block-head"><h2>Drinks</h2><span>7 items</span></div>
+      <div class="card-grid">
+        <div class="card"><div class="card-thumb">&#128167;</div><h4>Water</h4><span class="price">&pound;1.00</span><p>Still bottled water.</p></div>
+        <div class="card"><div class="card-thumb">&#129380;</div><h4>Juice</h4><span class="price">&pound;1.00</span><p>Chilled fruit juice &mdash; blackcurrant or strawberry.</p></div>
+        <div class="card"><div class="card-thumb">&#129380;</div><h4>Mango Lassi (330ml)</h4><span class="price">&pound;2.20</span><p>A smooth, creamy mango yoghurt drink.</p></div>
+        <div class="card"><div class="card-thumb">&#129371;</div><h4>Drink Can</h4><span class="price">&pound;1.50</span><p>Irn Bru, Irn Bru Extra, Rio, Tango Orange, Lemonade, Barr Cola, Salaam Cola, Vimto or Rubicon.</p></div>
+        <div class="card"><div class="card-thumb">&#129371;</div><h4>Glass Bottle (330ml)</h4><span class="price">&pound;2.50</span><p>A selection of glass-bottled soft drinks.</p></div>
+        <div class="card"><div class="card-thumb">&#129371;</div><h4>Orange Tango (1.5L)</h4><span class="price">&pound;3.50</span><p>A large bottle of Orange Tango to share.</p></div>
+        <div class="card"><div class="card-thumb">&#129371;</div><h4>Coke (1.25L)</h4><span class="price">&pound;3.50</span><p>A large bottle of Coca-Cola to share.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page cat-page" id="cat-desserts" data-page="cat-desserts" hidden>
+    <div class="wrap">
+      <a class="back-link" href="#" data-page="menu">&larr; Back to Menu</a>
+      <div class="cat-block-head"><h2>Desserts</h2><span>6 items</span></div>
+      <div class="card-grid">
+        <div class="card"><div class="card-thumb">&#127856;</div><h4>Chocolate Fudge Cake</h4><span class="price">&pound;4.00</span><p>Rich, gooey chocolate fudge cake, served in a generous slice.</p></div>
+        <div class="card"><div class="card-thumb">&#127856;</div><h4>Ferrero Rocher Cheesecake</h4><span class="price">&pound;4.50</span><p>Creamy cheesecake swirled with Ferrero Rocher for a chocolate-hazelnut finish.</p></div>
+        <div class="card"><div class="card-thumb">&#127856;</div><h4>Jam Coconut Sponge</h4><span class="price">&pound;4.50</span><p>Warm sponge cake layered with jam and coconut.</p></div>
+        <div class="card"><div class="card-thumb">&#127856;</div><h4>Jam Roly Poly</h4><span class="price">&pound;3.50</span><p>A classic steamed jam sponge, rolled and sliced.</p></div>
+        <div class="card"><div class="card-thumb">&#127856;</div><h4>Peanut Butter Stack</h4><span class="price">&pound;5.00</span><p>Layers of sponge and peanut butter, stacked and finished with a drizzle.</p></div>
+        <div class="card"><div class="card-thumb">&#127852;</div><h4>Twisto Ice Lolly</h4><span class="price">&pound;1.90</span><p>A classic fruity ice lolly, cool and refreshing.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page cat-page" id="cat-sides" data-page="cat-sides" hidden>
+    <div class="wrap">
+      <a class="back-link" href="#" data-page="menu">&larr; Back to Menu</a>
+      <div class="cat-block-head"><h2>Sides &amp; Salads</h2><span>11 items</span></div>
+      <div class="card-grid">
+        <div class="card"><div class="card-thumb">&#127839;</div><h4>Chips</h4><span class="price">&pound;1.50</span><p>Golden, crispy chips, cooked fresh to order.</p></div>
+        <div class="card"><div class="card-thumb">&#127839;</div><h4>Cheesy Chips</h4><span class="price">&pound;2.50</span><p>Our classic chips topped with melted cheese.</p></div>
+        <div class="card"><div class="card-thumb">&#127839;</div><h4>Spicy Chips</h4><span class="price">&pound;1.50</span><p>Chips tossed in our house spice mix for a bit of heat.</p></div>
+        <div class="card"><div class="card-thumb">&#129360;</div><h4>Pitta Bread</h4><span class="price">&pound;1.50</span><p>Warm, soft pitta, fresh from the oven.</p></div>
+        <div class="card"><div class="card-thumb">&#129360;</div><h4>Nan Bread</h4><span class="price">&pound;1.50</span><p>Light, fluffy nan bread, baked fresh.</p></div>
+        <div class="card"><div class="card-thumb">&#129360;</div><h4>Garlic Nan</h4><span class="price">&pound;1.50</span><p>Our fluffy nan brushed with garlic butter.</p></div>
+        <div class="card"><div class="card-thumb">&#127834;</div><h4>Rice</h4><span class="price">&pound;1.50</span><p>Fluffy steamed rice, the perfect side to any grill.</p></div>
+        <div class="card"><div class="card-thumb">&#127789;</div><h4>Tortilla Wrap</h4><span class="price">&pound;1.50</span><p>Soft tortilla wrap, great alongside any kebab or grill.</p></div>
+        <div class="card"><div class="card-thumb">&#129360;</div><h4>Chapatti</h4><span class="price">&pound;1.50</span><p>Thin, soft flatbread, baked fresh to order.</p></div>
+        <div class="card"><div class="card-thumb">&#129367;</div><h4>Mediterranean Salad</h4><span class="price">&pound;2.60</span><p>Fresh mixed salad with a Mediterranean-style dressing.</p></div>
+        <div class="card"><div class="card-thumb">&#129367;</div><h4>Caesar Salad</h4><span class="price">&pound;4.00</span><p>Crisp lettuce, parmesan and croutons tossed in Caesar dressing.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="contact" data-page="contact" hidden>
+    <div class="wrap">
+      <div class="contact-head">
+        <span class="eyebrow-red">Get in Touch</span>
+        <h2>Call ahead for collection.</h2>
+      </div>
+      <div class="contact-grid">
+        <div>
+          <span class="eyebrow-red">Contact Details</span>
+          <div class="info-row">
+            <span class="k">Phone</span>
+            <span class="v" id="phoneText">01204 867751<button class="copy-btn" data-copy="01204 867751" data-target="phoneMsg">Copy</button><span class="sr-copy-msg" id="phoneMsg"></span></span>
+          </div>
+          <div class="info-row">
+            <span class="k">Email</span>
+            <span class="v" id="emailText">info@mykebabhouse.co.uk<button class="copy-btn" data-copy="info@mykebabhouse.co.uk" data-target="emailMsg">Copy</button><span class="sr-copy-msg" id="emailMsg"></span></span>
+          </div>
+          <div class="info-row">
+            <span class="k">Address</span>
+            <span class="v">30 St Helens Rd, Bolton BL3 3NH</span>
+          </div>
+          <div class="info-row">
+            <span class="k">Orders</span>
+            <span class="v">Collection only</span>
+          </div>
+        </div>
+        <div>
+          <span class="eyebrow-red">Opening Hours</span>
+          <table class="hours-table">
+            <tr><td>Monday</td><td>4PM&ndash;12AM</td></tr>
+            <tr><td>Tuesday</td><td>4PM&ndash;12AM</td></tr>
+            <tr><td>Wednesday</td><td>4PM&ndash;12AM</td></tr>
+            <tr><td>Thursday</td><td>4PM&ndash;12AM</td></tr>
+            <tr><td>Friday</td><td>4PM&ndash;12AM</td></tr>
+            <tr><td>Saturday</td><td>4PM&ndash;12AM</td></tr>
+            <tr><td>Sunday</td><td>4PM&ndash;12AM</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="careers" data-page="careers" hidden>
+    <div class="wrap">
+      <div class="careers-card">
+        <div>
+          <span class="eyebrow-red">Join the Team</span>
+          <h2>We're always happy to meet good people.</h2>
+          <p>From the grill to the till, we're a family business looking for reliable, friendly people to join us in Bolton. Drop your details in store or get in touch to ask what's available.</p>
+        </div>
+        <a class="btn btn-primary" href="#" data-page="contact">Enquire About Roles</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <div class="brand">Kebab House Bolton</div>
+    <div>Taste Setters Ltd T/A Kebab House Bolton &middot; Est. 1976</div>
+    <div class="foot-social">
+      <a href="#" aria-label="Facebook">f</a>
+      <a href="#" aria-label="Instagram">ig</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function showPage(name){
+    document.querySelectorAll('.page').forEach(function(p){
+      p.hidden = (p.getAttribute('data-page') !== name);
+    });
+    var navTarget = name.indexOf('cat-') === 0 ? 'menu' : name;
+    document.querySelectorAll('nav.links a[data-page]').forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('data-page') === navTarget);
+    });
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll('a[data-page], button[data-page]').forEach(function(el){
+    el.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      showPage(el.getAttribute('data-page'));
+    });
+  });
+  showPage('home');
+
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var text = btn.getAttribute('data-copy');
+      var msgEl = document.getElementById(btn.getAttribute('data-target'));
+      function show(ok){
+        if(!msgEl) return;
+        msgEl.textContent = ok ? 'Copied' : 'Select to copy';
+        setTimeout(function(){ msgEl.textContent=''; }, 1800);
+      }
+      try{
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(text).then(function(){ show(true); }).catch(function(){ show(false); });
+        } else { show(false); }
+      }catch(e){ show(false); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
